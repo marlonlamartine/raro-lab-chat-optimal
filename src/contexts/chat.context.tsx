@@ -1,5 +1,5 @@
 import faker from "@faker-js/faker";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, memo, useContext, useEffect, useState } from "react";
 import { geraPessoas } from "../helpers/gera-pessoa";
 import { Mensagem } from "../types/Mensagem";
 import { ParticipanteChat } from "../types/Participantes";
@@ -22,18 +22,18 @@ export type ChatContextProps = {
 
 const ChatContext = createContext<ChatContextProps>({
   mensagens: [],
-  setMensagens: (_: Mensagem[]) => {},
+  setMensagens: (_: Mensagem[]) => { },
   buscaMensagem: '',
-  setBuscaMensagem: (_: string) => {},
+  setBuscaMensagem: (_: string) => { },
   participantes: [],
-  setParticipantes: (_: ParticipanteChat[]) => {},
-  adicionaMensagem: (texto: string, participante: ParticipanteChat) => {},
+  setParticipantes: (_: ParticipanteChat[]) => { },
+  adicionaMensagem: (texto: string, participante: ParticipanteChat) => { },
 });
 
-export const ChatProvider: React.FC = ({ children }) => {
-  const [ mensagens, setMensagens ] = useState<Mensagem[]>([]);
-  const [ buscaMensagem, setBuscaMensagem ] = useState<string>('');
-  const [ participantes, setParticipantes ] = useState<ParticipanteChat[]>([]);
+export const ChatProvider: React.FC = memo(({ children }) => {
+  const [mensagens, setMensagens] = useState<Mensagem[]>([]);
+  const [buscaMensagem, setBuscaMensagem] = useState<string>('');
+  const [participantes, setParticipantes] = useState<ParticipanteChat[]>([]);
 
   useEffect(() => {
     const participantes = [
@@ -63,7 +63,7 @@ export const ChatProvider: React.FC = ({ children }) => {
       clearInterval(interval);
     }
   }, []);
-  
+
   const adicionaMensagem = (texto: string, autor: ParticipanteChat) => {
     const mensagem: Mensagem = {
       id: faker.datatype.uuid(),
@@ -73,8 +73,10 @@ export const ChatProvider: React.FC = ({ children }) => {
       lida: false
     }
 
-    setMensagens(mensagens => [ mensagem, ...mensagens ]);
+    setMensagens(mensagens => [mensagem, ...mensagens]);
   };
+
+  //console.log(mensagens)
 
   return (
     <ChatContext.Provider
@@ -91,7 +93,7 @@ export const ChatProvider: React.FC = ({ children }) => {
       {children}
     </ChatContext.Provider>
   );
-};
+})
 
 export const useChat = () => {
   const context = useContext(ChatContext);

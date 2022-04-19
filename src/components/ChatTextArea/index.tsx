@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { useChat } from "../../contexts/chat.context";
 
-export const ChatTextArea = () => {
-  const [ texto, setTexto  ] = useState('');
+export const ChatTextArea = memo(() => {
+  const [texto, setTexto] = useState('');
   const chat = useChat();
 
   useEffect(() => {
@@ -25,14 +25,14 @@ export const ChatTextArea = () => {
     chat.adicionaMensagem(texto, participante!);
     setTexto('');
   }
-  
+
   return (
     <div className="border-t-2 border-gray-200 px-4 pt-4 mb-2 sm:mb-0">
       <div className="relative flex">
         <input
           type="text"
-          value={ texto }
-          onChange={ ev => setTexto(ev.target.value) }
+          value={texto}
+          onChange={ev => setTexto(ev.target.value)}
           placeholder="Mensagem"
           className="w-full focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-600 pl-4 bg-gray-200 rounded-md py-3"
         />
@@ -51,4 +51,4 @@ export const ChatTextArea = () => {
       </div>
     </div>
   );
-};
+})
